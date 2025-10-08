@@ -152,19 +152,19 @@
   <script>
     // --- DATA (add up to 12 as you like)
     const quizData = [
-      { question: "1+1 = কত?", options:[{text:"২", value:100},{text:"১০", value:0}] },
-      { question: "প্রতিদিন ফেসবুক স্ক্রল করেন?", options:[{text:"হ্যাঁ", value:10},{text:"না", value:5}] },
-      { question: "রাত ৩টায়ও ঘুম আসে না?", options:[{text:"হ্যাঁ", value:10},{text:"না", value:0}] },
+      { question: "1+1 = কত?", options:[{text:"২", value:100},{text:"১০", value:0}, {text:"উত্তর নাই", value:0}] },
+      { question: "VLC মিডিয়া প্লেয়ার ইন্সটলের ধাপ কয়টি?", options:[{text:"৯টি", value:10},{text:"০টি", value:5}, {text:"আমি ৫০ধাপে ইন্সটল করবো তোর তাতে কি?", value:5}] },
+      { question: "পাবলিক ভার্সিটির জাতীয় স্লোগান কী?", options:[{text:"পারলে Chance পেয়ে দেখা", value:10},{text:"গক গক গক", value:5}] },
       // To ensure the quiz functions correctly with the total score calculation, I'll add a few more questions to make a total of 12.
-      { question: "আপনি কি মনে করেন আপনি যা জানেন তা যথেষ্ট?", options:[{text:"হ্যাঁ", value:10},{text:"না", value:0}] },
-      { question: "খাবার খাওয়ার আগে ছবি তোলেন?", options:[{text:"হ্যাঁ", value:10},{text:"না", value:0}] },
-      { question: "একই গান বারবার শোনেন?", options:[{text:"হ্যাঁ", value:10},{text:"না", value:0}] },
-      { question: "অপরিচিত মানুষের সাথে সহজে কথা বলতে পারেন?", options:[{text:"না", value:10},{text:"হ্যাঁ", value:0}] },
-      { question: "সকালে উঠে সবার আগে ফোন চেক করেন?", options:[{text:"হ্যাঁ", value:10},{text:"না", value:0}] },
-      { question: "বন্ধুদের আড্ডায় সবার মনোযোগ আকর্ষণ করতে চান?", options:[{text:"হ্যাঁ", value:10},{text:"না", value:0}] },
-      { question: "কথার মাঝখানে ইংরেজী শব্দ ব্যবহার করেন?", options:[{text:"হ্যাঁ", value:10},{text:"না", value:0}] },
-      { question: "বই পড়ার চেয়ে সিনেমা দেখতে পছন্দ করেন?", options:[{text:"হ্যাঁ", value:10},{text:"না", value:0}] },
-      { question: "নিজের ভুল সহজে স্বীকার করেন না?", options:[{text:"না", value:10},{text:"হ্যাঁ", value:0}] },
+      { question: "২+৪+৬+.......+n; ধারাটির ৩য় পদ?", options:[{text:"৬", value:10},{text:"বলব নাহ", value:5}, {text:"(3√3*2)/√3", value:0}] },
+      { question: "ক্যালকুলাসের জনক কে??", options:[{text:"শেখ বঙ্গবল্টু", value:10},{text:"লিবনিজ", value:0}, {text:"নিউটন", value:0}] },
+      { question: "বুয়েটের বানানো অটোতে চাদে যাওয়া যাবে", options:[{text:"একমত", value:10},{text:"অসম্ভব", value:0}, {text:"ডিব্বারা বানালে যাবে", value:0}] },
+      { question: "১-৬৯ পর্যন্ত সংখ্যা কতটি?", options:[{text:"৬৯টি", value:10},{text:"৭০টি", value:0}, {text:"সাহীন নটির পোলাকে ধরে ফেল", value:5}] },
+      //{ question: "", options:[{text:"হ্যাঁ", value:10},{text:"না", value:0}] },
+     // { question: "বন্ধুদের আড্ডায় সবার মনোযোগ আকর্ষণ করতে চান?", options:[{text:"হ্যাঁ", value:10},{text:"না", value:0}] },
+     // { question: "কথার মাঝখানে ইংরেজী শব্দ ব্যবহার করেন?", options:[{text:"হ্যাঁ", value:10},{text:"না", value:0}] },
+      //{ question: "বই পড়ার চেয়ে সিনেমা দেখতে পছন্দ করেন?", options:[{text:"হ্যাঁ", value:10},{text:"না", value:0}] },
+      //{ question: "নিজের ভুল সহজে স্বীকার করেন না?", options:[{text:"না", value:10},{text:"হ্যাঁ", value:0}] },
     ];
 
     // --- STATE
@@ -232,7 +232,7 @@
       const percent = Math.round(normalizedScore);
       
       updateDonut(percent);
-      document.getElementById('result-text').textContent = `আপনি ${percent}% চোদনা`;
+      document.getElementById('result-text').textContent = `আপনি ${percent}% ডিব্বা`;
     }
 
     function restartQuiz(){
