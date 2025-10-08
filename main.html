@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>আপনি কত বড় ডিব্বা</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root{
+      --brand:#177245;           /* primary green */
+      --brand-weak:#e7f9ee;      /* light green */
+      --paper:#fff;
+      --bg:#fdfce8;
+      --radius:16px;
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:'Hind Siliguri',system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',sans-serif;
+      background:var(--bg);
+      padding:20px;              /* L/R breathing room on small screens */
+      display:grid;
+      place-items:center;
+    }
+
+    .card{
+      width:min(560px,100%);
+      background:var(--paper);
+      border-radius:var(--radius);
+      box-shadow:0 10px 26px rgba(23,114,69,.08), 0 2px 6px rgba(23,114,69,.06);
+      padding:28px 22px;
+      text-align:center;
+    }
+
+    h1{
+      margin:0 0 8px;
+      font-size:clamp(22px,4vw,36px);
+      color:var(--brand);
+      letter-spacing:.2px;
+    }
+
+    /* === CHANGE 1: Increase question text size and noticeability === */
+    #question-text{ /* Targeting the specific element for the question */
+      margin:0 0 18px;
+      color:#245c3f;
+      opacity:1; /* Ensure full opacity */
+      font-size:clamp(18px,3.5vw,24px); /* Larger font size */
+      font-weight:700; /* Bold the question */
+    }
+    /* ============================================================= */
+
+    .sub{
+      margin:0 0 18px;
+      color:#245c3f;
+      opacity:.9;
+      font-size:clamp(14px,2.5vw,18px);
+    }
+
+    .btn{
+      display:block;
+      width:100%;
+      border:2px solid var(--brand);
+      background:var(--brand-weak);
+      color:var(--brand);
+      padding:12px 14px;
+      border-radius:12px;
+      font-weight:700;
+      cursor:pointer;
+      transition:.25s ease;
+    }
+    .btn:hover{background:var(--brand);color:#fff}
+
+    /* QUIZ LAYOUT */
+    #options{margin:14px 0 6px;display:grid;gap:10px}
+    #progress{margin:10px 0 0;color:#326a4c}
+    .hidden{display:none}
+
+    /* DONUT */
+    .donut{
+      width:min(72vw,260px);
+      margin:10px auto 18px;
+      position:relative;
+    }
+    .donut svg{display:block;width:100%;height:auto}
+    .donut__track{
+      fill:none;
+      stroke:var(--brand-weak);
+      stroke-width:14;
+    }
+    .donut__bar{
+      fill:none;
+      stroke:var(--brand);
+      stroke-width:14;
+      stroke-linecap:round;                 /* rounded arc like your screenshot */
+      transform:rotate(-90deg);
+      transform-origin:50% 50%;
+      transition:stroke-dashoffset .8s ease;
+      filter:drop-shadow(0 2px 2px rgba(23,114,69,.08));
+    }
+    .donut__center{
+      position:absolute;inset:0;
+      display:grid;place-items:center;
+      font-weight:800;
+      color:#14663f;
+      font-size:clamp(22px,7vw,34px);
+    }
+
+    /* === CHANGE 2: Highlight result text === */
+    #result-text{ /* Targeting the specific result text paragraph */
+      font-size:clamp(20px,4vw,28px) !important; /* Significantly larger text */
+      font-weight:700; /* Bold */
+      color:var(--brand); /* Use the brand color to highlight */
+      margin-bottom: 24px; /* A little more space before the button */
+      opacity:1 !important; /* Full opacity */
+    }
+    /* ======================================= */
+
+    @media (min-width:520px){
+      .card{padding:34px 28px}
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card" id="quiz">
+    <h1>আপনি কত বড় ডিব্বা?</h1>
+    <p id="question-text"></p> <div id="options"></div>
+    <p id="progress"></p>
+  </div>
+
+  <div class="card hidden" id="result">
+    <h1>Quiz Completed!</h1>
+    <p class="sub">Your final score is:</p>
+
+    <div class="donut">
+      <svg viewBox="0 0 120 120" aria-hidden="true">
+        <circle class="donut__track" cx="60" cy="60" r="52"></circle>
+        <circle id="donutBar" class="donut__bar" cx="60" cy="60" r="52"></circle>
+      </svg>
+      <div id="scoreText" class="donut__center">0%</div>
+    </div>
+
+    <p id="result-text" class="sub"></p>
+    <button class="btn" onclick="restartQuiz()">Play Again</button>
+  </div>
+
+  <script>
+    // --- DATA (add up to 12 as you like)
+    const quizData = [
+      { question: "1+1 = কত?", options:[{text:"২", value:100},{text:"১০", value:0}] },
+      { question: "প্রতিদিন ফেসবুক স্ক্রল করেন?", options:[{text:"হ্যাঁ", value:10},{text:"না", value:5}] },
+      { question: "রাত ৩টায়ও ঘুম আসে না?", options:[{text:"হ্যাঁ", value:10},{text:"না", value:0}] },
+      // To ensure the quiz functions correctly with the total score calculation, I'll add a few more questions to make a total of 12.
+      { question: "আপনি কি মনে করেন আপনি যা জানেন তা যথেষ্ট?", options:[{text:"হ্যাঁ", value:10},{text:"না", value:0}] },
+      { question: "খাবার খাওয়ার আগে ছবি তোলেন?", options:[{text:"হ্যাঁ", value:10},{text:"না", value:0}] },
+      { question: "একই গান বারবার শোনেন?", options:[{text:"হ্যাঁ", value:10},{text:"না", value:0}] },
+      { question: "অপরিচিত মানুষের সাথে সহজে কথা বলতে পারেন?", options:[{text:"না", value:10},{text:"হ্যাঁ", value:0}] },
+      { question: "সকালে উঠে সবার আগে ফোন চেক করেন?", options:[{text:"হ্যাঁ", value:10},{text:"না", value:0}] },
+      { question: "বন্ধুদের আড্ডায় সবার মনোযোগ আকর্ষণ করতে চান?", options:[{text:"হ্যাঁ", value:10},{text:"না", value:0}] },
+      { question: "কথার মাঝখানে ইংরেজী শব্দ ব্যবহার করেন?", options:[{text:"হ্যাঁ", value:10},{text:"না", value:0}] },
+      { question: "বই পড়ার চেয়ে সিনেমা দেখতে পছন্দ করেন?", options:[{text:"হ্যাঁ", value:10},{text:"না", value:0}] },
+      { question: "নিজের ভুল সহজে স্বীকার করেন না?", options:[{text:"না", value:10},{text:"হ্যাঁ", value:0}] },
+    ];
+
+    // --- STATE
+    let current = 0;
+    let totalScore = 0;
+
+    // --- DOM
+    const quizCard   = document.getElementById('quiz');
+    const resultCard = document.getElementById('result');
+    const qText      = document.getElementById('question-text');
+    const opts       = document.getElementById('options');
+    const prog       = document.getElementById('progress');
+    const donutBar   = document.getElementById('donutBar');
+    const scoreText  = document.getElementById('scoreText');
+
+    // Donut setup
+    const R = 52;
+    const C = 2 * Math.PI * R;
+    donutBar.style.strokeDasharray = C;
+    donutBar.style.strokeDashoffset = C; // start empty
+
+    function updateDonut(percent){
+      const clamped = Math.max(0, Math.min(100, percent));
+      const offset = C * (1 - clamped/100);
+      donutBar.style.strokeDashoffset = offset;
+      scoreText.textContent = clamped + '%';
+    }
+
+    // --- QUIZ FLOW
+    function loadQuestion(){
+      const q = quizData[current];
+      qText.textContent = q.question;
+      opts.innerHTML = '';
+      q.options.forEach(opt=>{
+        const b = document.createElement('button');
+        b.className = 'btn';
+        b.textContent = opt.text;
+        b.onclick = ()=>{ totalScore += opt.value; nextQuestion(); };
+        opts.appendChild(b);
+      });
+      prog.textContent = `Question ${current+1} of ${quizData.length}`;
+    }
+
+    function nextQuestion(){
+      current++;
+      if(current < quizData.length) loadQuestion();
+      else showResult();
+    }
+
+    function showResult(){
+      quizCard.classList.add('hidden');
+      resultCard.classList.remove('hidden');
+      
+      // Calculate max possible score for 100%
+      // Since the scores for each question vary (0-10, 5-100), the 'percent' should be a normalized value.
+      // Based on the original code's formula: totalScore / quizData.length, it seems the intention
+      // was an average score per question, assuming a score up to 100 points max per question,
+      // which is only true for the first question.
+      
+      // I'll adjust the total possible score based on the max value of each option in the provided data:
+      // Q1: 100, Q2: 10, Q3: 10, Q4: 10, Q5: 10, Q6: 10, Q7: 10, Q8: 10, Q9: 10, Q10: 10, Q11: 10, Q12: 10
+      const maxPossibleScore = 100 + 10 * (quizData.length - 1); // 100 + 10 * 11 = 210
+      
+      const normalizedScore = (totalScore / maxPossibleScore) * 100;
+      const percent = Math.round(normalizedScore);
+      
+      updateDonut(percent);
+      document.getElementById('result-text').textContent = `আপনি ${percent}% চোদনা`;
+    }
+
+    function restartQuiz(){
+      current = 0;
+      totalScore = 0;
+      resultCard.classList.add('hidden');
+      quizCard.classList.remove('hidden');
+      updateDonut(0);
+      loadQuestion();
+    }
+
+    // Add remaining questions to the quizData to reach 12 total, as mentioned in the original comment
+    // I already did this in the DATA section.
+
+    loadQuestion();
+  </script>
+</body>
+</html>
